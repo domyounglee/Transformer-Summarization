@@ -1,7 +1,7 @@
 import json 
 import collections
 import glob
-from official.transformer.utils import tokenizer_cls_end as tokenizer
+from official.transformer.utils import tokenizer_cls as tokenizer
 # pylint: disable=g-bad-import-order
 from absl import app as absl_app
 from absl import flags
@@ -12,7 +12,7 @@ from official.utils.flags import core as flags_core
 
 def _encode_and_add_eos(line, subtokenizer):
   """Encode line with subtokenizer, and add EOS id to the end."""
-  return [tokenizer.CLS_ID] + subtokenizer.encode(line) +[tokenizer.END_ID]
+  return [tokenizer.CLS_ID] + subtokenizer.encode(line) 
 
 def _trim_and_decode(ids, subtokenizer):
   """Trim EOS and PAD tokens from ids, and decode to return a string."""
@@ -39,7 +39,7 @@ def main(unused_argv):
     #print(total_set)
     print_switch=True
     for mode,_set in total_set.items():
-        writer = tf.python_io.TFRecordWriter(FLAGS.data_dir+"/"+mode+"_eos.tfrecord")
+        writer = tf.python_io.TFRecordWriter(FLAGS.data_dir+"/"+mode+".tfrecord")
         mode_count = 0
         
         for file_name in _set:
@@ -48,8 +48,7 @@ def main(unused_argv):
                 for line in lines:
                     instances= json.loads(line)
                     for inst_index,instance in enumerate(instances):
-                        if len(instance['src'])==0:
-                            continue
+                        
 
                         src_list=[]
                         src_sep_list=[]
@@ -67,17 +66,12 @@ def main(unused_argv):
                             src_ids = _encode_and_add_eos(src_line,subtokenizer)
 
                             src_list.extend(src_ids)
-                            if i%2==0: 
-                              src_sep_list.extend([0]*len(src_ids))
-                            else:
-                              src_sep_list.extend([1]*len(src_ids))
+                            src_sep_list.extend([i]*len(src_ids))
                             src_cls_mask.extend([1]+[0]*(len(src_ids)-1))
-                            
+
+
                         src_list+= [tokenizer.EOS_ID]
-                        if src_sep_list[-1]==0:
-                            src_sep_list+=[1]
-                        else:
-                            src_sep_list+=[0]
+                        src_sep_list+=[i+1]
                         src_cls_mask+=[0]
 
                         tgt_list = []
@@ -97,19 +91,13 @@ def main(unused_argv):
 
                             tgt_ids = _encode_and_add_eos(tgt_line,subtokenizer)
 
-                            tgt_list.extend(tgt_ids)      
-                            if i%2==0: 
-                              tgt_sep_list.extend([0]*len(tgt_ids))
-                            else:
-                              tgt_sep_list.extend([1]*len(tgt_ids))
+                            tgt_list.extend(tgt_ids)       
+                            tgt_sep_list.extend([i]*len(tgt_ids))
                             tgt_cls_mask.extend([1]+[0]*(len(tgt_ids)-1))
 
                             
                         tgt_list+= [tokenizer.EOS_ID]
-                        if tgt_sep_list[-1]==0:
-                            tgt_sep_list+=[1]
-                        else:
-                            tgt_sep_list+=[0]
+                        tgt_sep_list+=[i+1]
                         tgt_cls_mask += [0]
 
 
