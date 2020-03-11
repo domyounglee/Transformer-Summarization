@@ -89,6 +89,7 @@ It goes same with the ```train_cls.sh```. The shell script file runs the ```tran
 
 ### 3. Model Inference
 There are 4 versions of Inference code.
+
 *A. **Original** with Beam search:*  ```test.sh```
 
 *B. **Original** with Beam search + Trigram_blocking:* ```test_triblock.sh```
