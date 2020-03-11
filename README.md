@@ -1,9 +1,12 @@
 # Transformer-Summarization
+ 
 This model is an Abstractive Summarization model based on [offical Tensorflow models](https://github.com/tensorflow/models). I changed the code to align the peformance with other Transformer based abstractive summarization models (https://github.com/tensorflow/tensor2tensor, https://github.com/nlpyang/PreSumm). You can check out what have changed on below. 
 
 ## Requirements
 Python3.6
+
 tensorflow==1.14.0 
+
 and install dependencies
 
     pip3 install --user -r /path/to/models/official/requirements.txt
@@ -21,26 +24,35 @@ We test the model on CNN/Daily dataset.
 | Vanilla Transformer + Truncated + Trigram_blocking + CLS_Token  | 40.22 | 17.63 | 37.35 | 
 
 *Vanilla Transformer : Transformer from [offical Tensorflow models](https://github.com/tensorflow/models) with learning rate schedule same as [Tensor2Tensor](https://github.com/tensorflow/tensor2tensor)
+
 **Truncated : truncated encode length to 512 and decode length to 128 and skip articles where the length is longer then 2048.
+
 *** Trigram_blocking : Prevent from spitting trigrams more then twice in inference time. 
+
 *** CLS_token : Add CLS token before every sentence. 
 
 ## Usage
 ### 1. Make .tfrecord file  (CNN/Daily dataset)
 I used two kinds of tfrecord dataset. 
+
 ***Original*** : One is from (http://github.com/tensorflow/tensor2tensor) which has only *inputs* and *targets* features. 
+
 ***Expanded*** : The other one is that i've made to add more features such as seperate tokens in BERT (Make sure all those related file names end with 'cls'). So follow the instructions if you want to add more featrues. 
 
 **A. Get the json file** : You can get the sentence splitted dataset as **json format**  by following instructions from [here](https://github.com/nlpyang/PreSumm).
+
 **B. Change paths of ```create_TF.sh``` and ```create_test.sh``` :** Set the *vocab_file* and *data_dir* to your file path. 
+
 **C. run the shell scripts** :
     
     ./create_TF.sh 
     ./create_test.sh
+    
 you can get .tfrecord file from *create_TF* which will be used for train, evaluation and .txt file from *create_test* which will be used for test.
 
 ### 2. Train the model 
 All you need to do is just change the path in the script file and run the shell script. 
+
 **A. Train with the *Original* dataset** ```train.sh```
 
     #set the current path to where the transformer_main.py code exist 
@@ -78,8 +90,11 @@ It goes same with the ```train_cls.sh```. The shell script file runs the ```tran
 ### 3. Model Inference
 There are 4 versions of Inference code.
 *A. **Original** with Beam search:*  ```test.sh```
+
 *B. **Original** with Beam search + Trigram_blocking:* ```test_triblock.sh```
+
 *C. **Expanded** with Beam search:* ```test_cls.sh```
+
 *D. **Expanded** with Beam search + Trigram_blocking:* ```test_triblock_cls.sh```
 
 ( Trigram_blocking :  trigrams are blocked during the beam search where the idea is from the paper [A DEEP REINFORCED MODEL FOR ABSTRACTIVE SUMMARIZATION](https://arxiv.org/pdf/1705.04304.pdf).)
