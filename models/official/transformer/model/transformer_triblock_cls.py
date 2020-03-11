@@ -171,7 +171,7 @@ class Transformer(object):
         length = tf.shape(embedded_inputs)[1]
         pos_encoding = model_utils.get_position_encoding(
             length, self.params["hidden_size"])
-        encoder_inputs = embedded_inputs - pos_encoding
+        encoder_inputs = embedded_inputs + pos_encoding
 
       if self.train:
         encoder_inputs = tf.nn.dropout(

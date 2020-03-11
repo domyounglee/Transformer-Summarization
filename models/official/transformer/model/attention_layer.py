@@ -208,7 +208,7 @@ class Attention(tf.layers.Layer):
     # Calculate dot product attention
     logits = tf.matmul(q, k, transpose_b=True)
 
-    vis =True
+    vis =False
 
     #domyounglee 20 02 19
     if identity_mask is not None:
