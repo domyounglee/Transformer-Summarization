@@ -2,6 +2,8 @@
  
 This model is an Abstractive Summarization model based on [offical Tensorflow models](https://github.com/tensorflow/models). I changed the code to align the peformance with other Transformer based abstractive summarization models (https://github.com/tensorflow/tensor2tensor, https://github.com/nlpyang/PreSumm). You can check out what have changed on below. 
 
+The inference time is 10times faster than the pytorch code. 
+
 ## Requirements
 Python3.6
 
